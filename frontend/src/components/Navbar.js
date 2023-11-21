@@ -16,7 +16,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <Link href={"/"} className="nav-link text-danger">
+          <Link href={"/fund-account"} className="nav-link text-danger">
             Fund Account
           </Link>
         </li>

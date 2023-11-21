@@ -6,23 +6,30 @@ import Navbar from "@/components/Navbar";
 import { headers } from "../../next.config";
 import { queryToJSON } from "../../helper";
 import axios from "axios";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [user, setUser] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+  });
+  const [display, setDisplay] = useState(false);
+  const [data, setData] = useState({});
   const submitForm = async (values) => {
     values.preventDefault();
     try {
-
-      let data = values.target.action.split("?")[1];
-  
-      const userObject = queryToJSON(data);
-      console.log(userObject);
       const response = await axios.post(
         "http://localhost:8050/users/register",
-        userObject
+        user
       );
-      
+      setDisplay(true)
+      setData(response.data.user);
+      alert(`Your user id is ${response.data.user.userId}, please keep safely`);
+      // console.log(response.data.user)
     } catch (err) {
       console.log(err);
     }
@@ -41,6 +48,15 @@ export default function Home() {
           onSubmit={(e) => submitForm(e)}
           className="col-7 mx-auto p-3 border rounded-3"
         >
+          {display === true ? <>
+            <table className="table table-bordered">
+              <caption className="text-danger">Please Keep Your user ID safely</caption>
+              <tr>
+                <td>UserId</td>
+                <td>{data.userId}</td>
+              </tr>
+            </table>
+          </> : ""}
           <h1 className="text-warning">
             Register ||<span className="fw-bold text-danger"> ATM APP</span>
           </h1>
@@ -50,6 +66,8 @@ export default function Home() {
             <input
               name="firstname"
               type="text"
+              value={user.firstname}
+              onChange={(e) => setUser({ ...user, firstname: e.target.value })}
               placeholder="First Name"
               className="form-control"
             />
@@ -59,6 +77,8 @@ export default function Home() {
             <input
               name="lastname"
               type="text"
+              value={user.lastname}
+              onChange={(e) => setUser({ ...user, lastname: e.target.value })}
               placeholder="Last Name"
               className="form-control"
             />
@@ -68,6 +88,8 @@ export default function Home() {
             <input
               name="email"
               type="email"
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
               placeholder="Email"
               className="form-control"
             />
@@ -77,6 +99,8 @@ export default function Home() {
             <input
               name="password"
               type="password"
+              value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
               placeholder="Password"
               className="form-control"
             />

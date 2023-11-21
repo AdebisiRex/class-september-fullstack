@@ -12,8 +12,8 @@ mongoose
   .then(() => {
     console.log("MongoDB has connected Successfully");
   })
-  .catch(() => {
-    console.log("There was an error connecting to the Database");
+  .catch((err) => {
+    console.log({message: "There was an error connecting to the Database", err});
   });
 
 app.get("/", (req, res) => {
@@ -25,6 +25,11 @@ app.post("/xxx",(req,res)=>{
 const PORT = 8050;
 const userRouter = require("./routes/user.routes");
 app.use("/users", userRouter);
+
+const accountRouter = require("./routes/account.route")
+app.use("/account", accountRouter)
+
+
 app.listen(PORT, () => {
   console.log("App Started @ PORT:" + PORT);
 });
