@@ -11,7 +11,6 @@ const FundAccount = () => {
   const addMoneyToAccount = async (e) => {
       e.preventDefault();
     const data = await axios.post("http://localhost:8050/account/fund-account", value);
-
     console.log(data)
   };
   return (

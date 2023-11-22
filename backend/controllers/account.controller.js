@@ -5,18 +5,27 @@ const fundAccount = async (req, res) => {
     const { email, amount, password } = req.body;
 
     //find who owns this email and password
-    const user = await userModel.findOne({ email, password });
+    const user = await userModel.findOne({ email });
     if (!user) {
       res.send({ message: "User does not exist " });
       return;
     }
-    const newAccountBalance = user.accountBalance + Number(amount);
-    // console.log(newAccountBalance);
-    const update = await userModel.findByIdAndUpdate(user._id, {
-      accountBalance: newAccountBalance,
+    user.validator(password, async (same) => {
+      if (same) {
+        console.log("Hello  The password you are entering is safe");
+        const newAccountBalance = user.accountBalance + Number(amount);
+        // console.log(newAccountBalance);
+        const update = await userModel.findByIdAndUpdate(user._id, {
+          accountBalance: newAccountBalance,
+        });
+
+        res.send({ message: "account updated successfully", update });
+      } else {
+        res.send({message: "Invalid Credentials", status:"false"})
+      }
     });
 
-    res.send({ message: "account updated successfully", update });
+    return;
   } catch (err) {
     res.send({ message: "There was an error", err });
   }
