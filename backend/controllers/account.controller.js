@@ -1,31 +1,22 @@
 const userModel = require("../models/user.model");
-
+const jwt = require("jsonwebtoken");
 const fundAccount = async (req, res) => {
   try {
-    const { email, amount, password } = req.body;
-
-    //find who owns this email and password
+    const { amount } = req.body;
+    const token = req.headers.authorization;
+    console.log(token);
+    const { email } = await jwt.verify(token, "CLASS_SEPTEMBER_2023");
     const user = await userModel.findOne({ email });
+    // //find who owns this email
     if (!user) {
       res.send({ message: "User does not exist " });
       return;
     }
-    user.validator(password, async (same) => {
-      if (same) {
-        console.log("Hello  The password you are entering is safe");
-        const newAccountBalance = user.accountBalance + Number(amount);
-        // console.log(newAccountBalance);
-        const update = await userModel.findByIdAndUpdate(user._id, {
-          accountBalance: newAccountBalance,
-        });
-
-        res.send({ message: "account updated successfully", update });
-      } else {
-        res.send({message: "Invalid Credentials", status:"false"})
-      }
+    const newAccountBalance = user.accountBalance + Number(amount);
+    const update = await userModel.findByIdAndUpdate(user._id, {
+      accountBalance: newAccountBalance,
     });
-
-    return;
+    res.send({ message: "account updated successfully", update });
   } catch (err) {
     res.send({ message: "There was an error", err });
   }

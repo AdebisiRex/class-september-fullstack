@@ -26,8 +26,8 @@ const Navbar = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <Link href={"/"} className="nav-link text-danger">
-            Register
+          <Link href={"/login"} className="nav-link text-danger">
+            Login
           </Link>
         </li>
       </ul>

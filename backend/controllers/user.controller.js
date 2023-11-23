@@ -1,4 +1,5 @@
 const userModel = require("../models/user.model");
+const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
   try {
@@ -18,4 +19,28 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser };
+const loginUser = async (req, res) => {
+  try {
+    const { email, amount, password } = req.body;
+
+    //find who owns this email
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      res.send({ message: "User does not exist " });
+      return;
+    }
+    user.validator(password, async (same) => {
+      if (same) {
+        const token = jwt.sign({email: user.email}, "CLASS_SEPTEMBER_2023");
+        console.log(token);
+        res.send({ status: true, message: "Login Success ", user, token });
+      } else {
+        res.send({ message: "Invalid Credentials", status: "false" });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { registerUser, loginUser };

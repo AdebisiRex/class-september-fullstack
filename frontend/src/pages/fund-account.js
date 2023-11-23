@@ -1,17 +1,20 @@
 import Navbar from "@/components/Navbar";
 import axios from "axios";
 import React, { useState } from "react";
+import { headers } from "../../next.config";
 
 const FundAccount = () => {
   const [value, setValues] = useState({
-    email: "",
-    password: "",
     amount: "",
   });
   const addMoneyToAccount = async (e) => {
-      e.preventDefault();
-    const data = await axios.post("http://localhost:8050/account/fund-account", value);
-    console.log(data)
+    e.preventDefault();
+    const data = await axios.post(
+      "http://localhost:8050/account/fund-account",
+      value,
+      { headers: { Authorization: localStorage.token  } }
+    );
+    console.log(data);
   };
   return (
     <div>
@@ -20,7 +23,7 @@ const FundAccount = () => {
         onSubmit={(e) => addMoneyToAccount(e)}
         className="col-7 mx-auto border rounded-3 p-3"
       >
-        <h1>Fund Account</h1>
+        {/* <h1>Fund Account</h1>
         <input
           type="text"
           placeholder="Email"
@@ -35,7 +38,7 @@ const FundAccount = () => {
           value={value.password}
           onChange={(e) => setValues({ ...value, password: e.target.value })}
         />
-        <hr />
+        <hr /> */}
         <input
           type="number"
           min={"0"}
