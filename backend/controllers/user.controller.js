@@ -1,6 +1,24 @@
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 
+const cloudinary = require("cloudinary");
+
+cloudinary.v2.config({
+  cloud_name: "dcntfpntm",
+  api_key: "963429939113368",
+  api_secret: "-Vp9g6gGPNox2OJ7EzMPCAAxZqU",
+});
+
+const uploadPhoto = async (req, res) => {
+  cloudinary.v2.uploader.upload(
+    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
+    { public_id: "olympic_flag" },
+    function (error, result) {
+      console.log(result);
+    }
+  );
+};
+
 const registerUser = async (req, res) => {
   try {
     const data = req.body;
@@ -31,7 +49,7 @@ const loginUser = async (req, res) => {
     }
     user.validator(password, async (same) => {
       if (same) {
-        const token = jwt.sign({email: user.email}, "CLASS_SEPTEMBER_2023");
+        const token = jwt.sign({ email: user.email }, "CLASS_SEPTEMBER_2023");
         console.log(token);
         res.send({ status: true, message: "Login Success ", user, token });
       } else {
@@ -43,4 +61,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerUser, loginUser, uploadPhoto };
