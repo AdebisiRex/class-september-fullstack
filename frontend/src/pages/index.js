@@ -26,7 +26,7 @@ export default function Home() {
         "http://localhost:8050/users/register",
         user
       );
-      setDisplay(true)
+      setDisplay(true);
       setData(response.data.user);
       alert(`Your user id is ${response.data.user.userId}, please keep safely`);
       // console.log(response.data.user)
@@ -34,6 +34,22 @@ export default function Home() {
       console.log(err);
     }
   };
+
+  const processImage =(e)=>{
+    const img = e.target.files[0]
+    console.log(img)
+
+    const file = new FileReader(); 
+    file.readAsDataURL(img)
+    file.onload =async()=>{
+      console.log ("Hello we have been completed ")
+      console.log({img, file})
+      console.log(file.result)
+     let data = await axios.post("http://localhost:8050/users/upload-image",{image: file.result, name: "adebisi"})
+
+     console.log(data)
+    }
+  }
   return (
     <>
       <Head>
@@ -42,21 +58,35 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <div className="my-5 mx-auto col-9 p-4 bg-success bg-opacity-25">
+        <input onChange={(e)=>processImage(e)} className="form-control mb-3" type="file"  name="" id="" />
+        <input type="text" className="form-control mb-3" placeholder="File name" name="" id="" />
+        <button className="form-control btn btn-danger"> Upload File</button>
+      </div>
+
+
       <main>
         <Navbar />
         <form
           onSubmit={(e) => submitForm(e)}
           className="col-7 mx-auto p-3 border rounded-3"
         >
-          {display === true ? <>
-            <table className="table table-bordered">
-              <caption className="text-danger">Please Keep Your user ID safely</caption>
-              <tr>
-                <td>UserId</td>
-                <td>{data.userId}</td>
-              </tr>
-            </table>
-          </> : ""}
+          {display === true ? (
+            <>
+              <table className="table table-bordered">
+                <caption className="text-danger">
+                  Please Keep Your user ID safely
+                </caption>
+                <tr>
+                  <td>UserId</td>
+                  <td>{data.userId}</td>
+                </tr>
+              </table>
+            </>
+          ) : (
+            ""
+          )}
           <h1 className="text-warning">
             Register ||<span className="fw-bold text-danger"> ATM APP</span>
           </h1>
@@ -108,6 +138,8 @@ export default function Home() {
           <button className="form-control btn btn-danger">Register</button>
         </form>
       </main>
+
+      
     </>
   );
 }

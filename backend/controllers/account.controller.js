@@ -1,5 +1,8 @@
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
+const cloudinary = require('cloudinary')
+
+
 const fundAccount = async (req, res) => {
   try {
     const { amount } = req.body;
