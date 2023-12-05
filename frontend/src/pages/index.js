@@ -38,13 +38,14 @@ export default function Home() {
   const processImage =(e)=>{
     const img = e.target.files[0]
     console.log(img)
-
+    // return 
     const file = new FileReader(); 
     file.readAsDataURL(img)
     file.onload =async()=>{
       console.log ("Hello we have been completed ")
       console.log({img, file})
       console.log(file.result)
+      // return
      let data = await axios.post("http://localhost:8050/users/upload-image",{image: file.result, name: "adebisi"})
 
      console.log(data)
